@@ -95,4 +95,4 @@ Update database credentials inside backend/config.php
 ## 👨‍💻 Author  
 
 - **Attiq Ur Rehman**  
-  [GitHub Profile](https://github.com/attiq-ur-rehman4855)  
+  [GitHub Profile](https://github.com/attiq-ur-rehman4855)
