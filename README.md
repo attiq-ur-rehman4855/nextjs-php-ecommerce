@@ -90,9 +90,9 @@ Example: C:\xampp\htdocs\backend
 Import database from /backend/database/ecommerce.sql into phpMyAdmin
 
 Update database credentials inside backend/config.php
-
+```
 
 ## 👨‍💻 Author  
 
 - **Attiq Ur Rehman**  
-  👉 [GitHub Profile](https://github.com/attiq-ur-rehman4855)
+  [GitHub Profile](https://github.com/attiq-ur-rehman4855)  
