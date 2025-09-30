@@ -33,7 +33,7 @@ export default function SearchPage() {
   return (
     <div className="min-h-screen p-6 bg-gray-50">
       <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">
-        Search Results for "{query}"
+        Search Results for &quot;{query}&quot;
       </h2>
 
       {msg && <p className="text-center text-red-500 mb-4">{msg}</p>}
