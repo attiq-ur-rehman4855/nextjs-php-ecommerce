@@ -12,14 +12,14 @@ export default function AdminDashboard() {
     const fetchData = async () => {
       // Fetch dashboard stats
       const statsRes = await fetch(
-        "http://localhost/ecommerce-nextjs/admin_area/api/get_dashboard_stats.php"
+        "https://shop-sphere.infinityfreeapp.com/api/admin/get_dashboard_stats.php"
       );
       const stats = await statsRes.json();
       setDashboardData(stats);
 
       // Fetch recent orders
       const ordersRes = await fetch(
-        "http://localhost/ecommerce-nextjs/admin_area/api/get_recent_orders.php"
+        "https://shop-sphere.infinityfreeapp.com/api/admin/get_recent_orders.php"
       );
       const orders = await ordersRes.json();
       setRecentOrders(orders);
@@ -27,12 +27,12 @@ export default function AdminDashboard() {
       // Fetch admin image
       if (adminId) {
         const profileRes = await fetch(
-          `http://localhost/ecommerce-nextjs/admin_area/api/get_admin_profile.php?admin_id=${adminId}`
+          `https://shop-sphere.infinityfreeapp.com/api/admin/get_admin_profile.php?admin_id=${adminId}`
         );
         const profileData = await profileRes.json();
         if (profileData.status === "success") {
           setAdminImage(
-            `http://localhost/ecommerce-nextjs/admin_area/admin_images/${profileData.data.image}`
+            `https://shop-sphere.infinityfreeapp.com/api/admin/admin_images/${profileData.data.image}`
           );
         }
       }

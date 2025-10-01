@@ -23,7 +23,7 @@ export default function ViewProducts() {
   const fetchProducts = async () => {
     try {
       const res = await fetch(
-        "http://localhost/ecommerce-nextjs/admin_area/api/get_products.php"
+        "https://shop-sphere.infinityfreeapp.com/api/admin/get_products.php"
       );
       const data = await res.json();
       setProducts(data);
@@ -40,7 +40,7 @@ export default function ViewProducts() {
 
     try {
       const res = await fetch(
-        "http://localhost/ecommerce-nextjs/admin_area/api/delete_product.php",
+        "https://shop-sphere.infinityfreeapp.com/api/admin/delete_product.php",
         {
           method: "POST",
           body: formData,
@@ -86,7 +86,7 @@ export default function ViewProducts() {
                 <td className="p-3">Rs. {prod.product_price}</td>
                 <td className="p-3">
                   <img
-                    src={`http://localhost/ecommerce-nextjs/admin_area/product_images/${prod.product_image1}`}
+                    src={`https://shop-sphere.infinityfreeapp.com/api/admin/product_images/${prod.product_image1}`}
                     alt={prod.product_title}
                     className="w-12 h-12 object-cover rounded"
                   />

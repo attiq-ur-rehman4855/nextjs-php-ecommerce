@@ -27,7 +27,7 @@ export default function AddCategory() {
     formData.append("category_title", categoryTitle);
 
     try {
-      const res = await fetch("http://localhost/ecommerce-nextjs/admin_area/api/add_category.php", {
+      const res = await fetch("https://shop-sphere.infinityfreeapp.com/api/admin/add_category.php", {
         method: "POST",
         body: formData,
       });

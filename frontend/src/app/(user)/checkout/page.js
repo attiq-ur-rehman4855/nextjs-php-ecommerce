@@ -36,7 +36,7 @@ export default function CheckoutPage() {
       phone: storedPhone,
     }));
     fetch(
-      `http://localhost/ecommerce-nextjs/user_area/api/get_cart_items.php?user_id=${userId}`
+      `https://shop-sphere.infinityfreeapp.com/api/user/get_cart_items.php?user_id=${userId}`
     )
       .then((res) => res.json())
       .then((data) => {
@@ -97,7 +97,7 @@ export default function CheckoutPage() {
 
       try {
         const res = await fetch(
-          "http://localhost/ecommerce-nextjs/user_area/api/place_order_cod.php",
+          "https://shop-sphere.infinityfreeapp.com/api/user/place_order_cod.php",
           {
             method: "POST",
             headers: {
@@ -226,7 +226,7 @@ export default function CheckoutPage() {
                 {/* Left Section */}
                 <div className="flex items-center gap-4 mb-2 sm:mb-0">
                   <img
-                    src={`http://localhost/ecommerce-nextjs/admin_area/product_images/${item.product_image}`}
+                    src={`https://shop-sphere.infinityfreeapp.com/api/admin/product_images/${item.product_image}`}
                     alt={item.product_title}
                     className="w-16 h-16 object-cover rounded"
                   />

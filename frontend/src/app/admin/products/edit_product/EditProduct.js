@@ -31,7 +31,7 @@ export default function EditProduct() {
 
   const fetchProduct = async () => {
     try {
-      const res = await fetch(`http://localhost/ecommerce-nextjs/admin_area/api/get_single_product.php?id=${id}`);
+      const res = await fetch(`https://shop-sphere.infinityfreeapp.com/api/admin/get_single_product.php?id=${id}`);
       const data = await res.json();
       setFormData({
         title: data.product_title,
@@ -50,13 +50,13 @@ export default function EditProduct() {
   };
 
   const fetchCategories = async () => {
-    const res = await fetch("http://localhost/ecommerce-nextjs/admin_area/api/get_categories.php");
+    const res = await fetch("https://shop-sphere.infinityfreeapp.com/api/admin/get_categories.php");
     const data = await res.json();
     setCategories(data);
   };
 
   const fetchBrands = async () => {
-    const res = await fetch("http://localhost/ecommerce-nextjs/admin_area/api/get_brands.php");
+    const res = await fetch("https://shop-sphere.infinityfreeapp.com/api/admin/get_brands.php");
     const data = await res.json();
     setBrands(data);
   };
@@ -84,7 +84,7 @@ export default function EditProduct() {
     data.append("brand_id", formData.brand_id);
     data.append("keywords", formData.keywords);
 
-    const res = await fetch("http://localhost/ecommerce-nextjs/admin_area/api/update_product.php", {
+    const res = await fetch("https://shop-sphere.infinityfreeapp.com/api/admin/update_product.php", {
       method: "POST",
       body: data,
     });

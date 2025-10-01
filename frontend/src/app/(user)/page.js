@@ -14,7 +14,7 @@ export default function Home() {
   const fetchProducts = async () => {
     try {
       const res = await fetch(
-        "http://localhost/ecommerce-nextjs/user_area/api/get_home_products.php"
+        "https://shop-sphere.infinityfreeapp.com/api/user/get_home_products.php"
       );
       const data = await res.json();
       setProducts(data);
@@ -85,7 +85,7 @@ export default function Home() {
                 className="bg-white rounded shadow p-4 hover:shadow-xl transform hover:scale-105 transition duration-300"
               >
                 <img
-                  src={`http://localhost/ecommerce-nextjs/admin_area/product_images/${prod.product_image1}`}
+                  src={`https://shop-sphere.infinityfreeapp.com/api/admin/product_images/${prod.product_image1}`}
                   alt={prod.product_title}
                   className="w-full h-40 object-cover mb-4 rounded"
                 />

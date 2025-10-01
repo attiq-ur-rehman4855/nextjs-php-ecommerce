@@ -12,7 +12,7 @@ export default function EditBrand() {
 
   useEffect(() => {
     if (brandId) {
-      fetch(`http://localhost/ecommerce-nextjs/admin_area/api/get_single_brand.php?brand_id=${brandId}`)
+      fetch(`https://shop-sphere.infinityfreeapp.com/api/admin/get_single_brand.php?brand_id=${brandId}`)
         .then((res) => res.json())
         .then((data) => {
           if (!data.error) {
@@ -32,7 +32,7 @@ export default function EditBrand() {
     formData.append("brand_title", brandTitle);
 
     try {
-      const res = await fetch("http://localhost/ecommerce-nextjs/admin_area/api/update_brand.php", {
+      const res = await fetch("https://shop-sphere.infinityfreeapp.com/api/admin/update_brand.php", {
         method: "POST",
         body: formData,
       });

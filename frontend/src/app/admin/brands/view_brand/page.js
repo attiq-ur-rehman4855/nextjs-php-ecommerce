@@ -24,7 +24,7 @@ export default function ViewBrands() {
   const fetchBrands = async () => {
     try {
       const res = await fetch(
-        "http://localhost/ecommerce-nextjs/admin_area/api/get_brands.php"
+        "https://shop-sphere.infinityfreeapp.com/api/admin/get_brands.php"
       );
       const data = await res.json();
       setBrands(data);
@@ -41,7 +41,7 @@ export default function ViewBrands() {
 
     try {
       const res = await fetch(
-        "http://localhost/ecommerce-nextjs/admin_area/api/delete_brand.php",
+        "https://shop-sphere.infinityfreeapp.com/api/admin/delete_brand.php",
         {
           method: "POST",
           body: formData,

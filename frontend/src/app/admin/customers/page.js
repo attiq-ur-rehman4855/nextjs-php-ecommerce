@@ -6,7 +6,7 @@ export default function Customers() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://localhost/ecommerce-nextjs/admin_area/api/get_customers.php")
+    fetch("https://shop-sphere.infinityfreeapp.com/api/admin/get_customers.php")
       .then((res) => res.json())
       .then((data) => {
         if (data.status === "success") {
@@ -50,7 +50,7 @@ export default function Customers() {
                   <td className="p-2 border text-center">
                     {cust.image ? (
                       <img
-                        src={`http://localhost/ecommerce-nextjs/user_area/user_images/${cust.image}`}
+                        src={`https://shop-sphere.infinityfreeapp.com/api/user/user_images/${cust.image}`}
                         alt={cust.name}
                         className="w-12 h-12 rounded-full mx-auto"
                       />

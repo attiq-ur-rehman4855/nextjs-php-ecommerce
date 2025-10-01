@@ -33,7 +33,7 @@ export const AuthProvider = ({ children }) => {
   const fetchCartCount = async (uid) => {
     try {
       const res = await fetch(
-        `http://localhost/ecommerce-nextjs/user_area/api/get_cart_count.php?user_id=${uid}`
+        `https://shop-sphere.infinityfreeapp.com/api/user/get_cart_count.php?user_id=${uid}`
       );
       const data = await res.json();
       setCartCount(data.count || 0);

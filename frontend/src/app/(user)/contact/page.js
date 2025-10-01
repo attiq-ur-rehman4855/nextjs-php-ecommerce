@@ -50,7 +50,7 @@ export default function Contact() {
     }
 
     try {
-      const res = await fetch("http://localhost/ecommerce-nextjs/user_area/api/save_message.php", {
+      const res = await fetch("https://shop-sphere.infinityfreeapp.com/api/user/save_message.php", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),

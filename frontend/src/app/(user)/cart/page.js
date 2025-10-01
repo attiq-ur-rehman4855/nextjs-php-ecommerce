@@ -25,7 +25,7 @@ export default function CartPage() {
   const fetchCartItems = async () => {
     try {
       const res = await fetch(
-        `http://localhost/ecommerce-nextjs/user_area/api/get_cart_items.php?user_id=${userId}`
+        `https://shop-sphere.infinityfreeapp.com/api/user/get_cart_items.php?user_id=${userId}`
       );
       const data = await res.json();
       if (data.length) {
@@ -43,7 +43,7 @@ export default function CartPage() {
   const handleRemove = async (itemId) => {
     try {
       const res = await fetch(
-        `http://localhost/ecommerce-nextjs/user_area/api/remove_cart_item.php?id=${itemId}`
+        `https://shop-sphere.infinityfreeapp.com/api/user/remove_cart_item.php?id=${itemId}`
       );
       const data = await res.json();
       if (data.status === "success") {
@@ -59,7 +59,7 @@ export default function CartPage() {
     if (newQty < 1) return;
     try {
       const res = await fetch(
-        "http://localhost/ecommerce-nextjs/user_area/api/update_cart_quantity.php",
+        "http://shop-sphere.infinityfreeapp.com/api/user/update_cart_quantity.php",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -101,7 +101,7 @@ export default function CartPage() {
               {/* Left Side: Image + Details */}
               <div className="flex items-center gap-4">
                 <img
-                  src={`http://localhost/ecommerce-nextjs/admin_area/product_images/${item.product_image}`}
+                  src={`https://shop-sphere.infinityfreeapp.com/api/admin/product_images/${item.product_image}`}
                   alt={item.product_title}
                   className="w-20 h-20 object-cover rounded"
                 />

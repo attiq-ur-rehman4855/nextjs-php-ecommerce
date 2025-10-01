@@ -27,7 +27,7 @@ export default function AddCategory() {
     formData.append("brand_title", brandTitle);
 
     try {
-      const res = await fetch("http://localhost/ecommerce-nextjs/admin_area/api/add_brand.php", {
+      const res = await fetch("https://shop-sphere.infinityfreeapp.com/api/admin/add_brand.php", {
         method: "POST",
         body: formData,
       });

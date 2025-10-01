@@ -30,7 +30,7 @@ export default function UserProfile() {
   useEffect(() => {
     const id = sessionStorage.getItem("user_id");
     fetch(
-      `http://localhost/ecommerce-nextjs/user_area/api/get_user.php?id=${id}`
+      `https://shop-sphere.infinityfreeapp.com/api/user/get_user.php?id=${id}`
     )
       .then((res) => res.json())
       .then((data) => {
@@ -42,7 +42,7 @@ export default function UserProfile() {
           image: null,
         });
         setPreviewImage(
-          `http://localhost/ecommerce-nextjs/user_area/user_images/${data.image}`
+          `https://shop-sphere.infinityfreeapp.com/api/user/user_images/${data.image}`
         );
       });
   }, []);
@@ -52,7 +52,7 @@ export default function UserProfile() {
     if (activeTab === "orders" && userId) {
       setLoadingOrders(true);
       fetch(
-        `http://localhost/ecommerce-nextjs/user_area/api/get_user_orders.php?user_id=${userId}`
+        `https://shop-sphere.infinityfreeapp.com/api/user/get_user_orders.php?user_id=${userId}`
       )
         .then((res) => res.json())
         .then((data) => {
@@ -70,7 +70,7 @@ export default function UserProfile() {
       setOrderDetails(updated);
     } else {
       const res = await fetch(
-        `http://localhost/ecommerce-nextjs/user_area/api/get_order_details.php?order_id=${orderId}`
+        `https://shop-sphere.infinityfreeapp.com/api/user/get_order_details.php?order_id=${orderId}`
       );
       const data = await res.json();
       setOrderDetails((prev) => ({ ...prev, [orderId]: data }));
@@ -101,7 +101,7 @@ export default function UserProfile() {
 
     try {
       const res = await fetch(
-        "http://localhost/ecommerce-nextjs/user_area/api/update_profile.php",
+        "https://shop-sphere.infinityfreeapp.com/api/user/update_profile.php",
         {
           method: "POST",
           body: form,
@@ -151,7 +151,7 @@ export default function UserProfile() {
     const userId = sessionStorage.getItem("user_id");
     try {
       const res = await fetch(
-        "http://localhost/ecommerce-nextjs/user_area/api/change_password.php",
+        "https://shop-sphere.infinityfreeapp.com/api/user/change_password.php",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

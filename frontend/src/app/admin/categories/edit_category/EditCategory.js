@@ -12,7 +12,7 @@ export default function EditCategory() {
 
   useEffect(() => {
     if (categoryId) {
-      fetch(`http://localhost/ecommerce-nextjs/admin_area/api/get_single_category.php?category_id=${categoryId}`)
+      fetch(`https://shop-sphere.infinityfreeapp.com/api/admin/get_single_category.php?category_id=${categoryId}`)
         .then((res) => res.json())
         .then((data) => {
           if (!data.error) {
@@ -32,7 +32,7 @@ export default function EditCategory() {
     formData.append("category_title", categoryTitle);
 
     try {
-      const res = await fetch("http://localhost/ecommerce-nextjs/admin_area/api/update_category.php", {
+      const res = await fetch("https://shop-sphere.infinityfreeapp.com/api/admin/update_category.php", {
         method: "POST",
         body: formData,
       });

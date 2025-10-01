@@ -20,7 +20,7 @@ export async function POST(req) {
         quantity: item.quantity,
       })),
       mode: "payment",
-      success_url: `http://localhost:3000/payment-success?session_id={CHECKOUT_SESSION_ID}&user_id=${userId}&fullname=${encodeURIComponent(
+      success_url: `https://shop-sphere.infinityfreeapp.com/payment-success?session_id={CHECKOUT_SESSION_ID}&user_id=${userId}&fullname=${encodeURIComponent(
         billingDetails.fullname
       )}&email=${encodeURIComponent(
         billingDetails.email
@@ -33,7 +33,7 @@ export async function POST(req) {
       )}&country=${encodeURIComponent(
         billingDetails.country
       )}&zip=${encodeURIComponent(billingDetails.zip)}`,
-      cancel_url: `http://localhost:3000/checkout`,
+      cancel_url: `https://shop-sphere.infinityfreeapp.com/checkout`,
     });
 
     return Response.json({ sessionId: session.id });

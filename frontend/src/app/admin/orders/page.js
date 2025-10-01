@@ -6,7 +6,7 @@ export default function OrdersList() {
   const [orders, setOrders] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost/ecommerce-nextjs/admin_area/api/get_orders.php")
+    fetch("https://shop-sphere.infinityfreeapp.com/api/admin/get_orders.php")
       .then((res) => res.json())
       .then((data) => setOrders(data))
       .catch((err) => console.error(err));

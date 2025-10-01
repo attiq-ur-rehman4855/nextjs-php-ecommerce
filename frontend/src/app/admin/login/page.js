@@ -26,7 +26,7 @@ export default function LoginPage() {
 
     try {
       const res = await fetch(
-        "http://localhost/ecommerce-nextjs/admin_area/api/admin_login.php",
+        "https://shop-sphere.infinityfreeapp.com/api/admin/admin_login.php",
         {
           method: "POST",
           body: formData,

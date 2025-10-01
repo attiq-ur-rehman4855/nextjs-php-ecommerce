@@ -31,7 +31,7 @@ const PaymentSuccess = () => {
 
     if (session_id && user_id) {
       fetch(
-        "http://localhost/ecommerce-nextjs/user_area/api/place_order_stripe.php",
+        "https://shop-sphere.infinityfreeapp.com/api/user/place_order_stripe.php",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

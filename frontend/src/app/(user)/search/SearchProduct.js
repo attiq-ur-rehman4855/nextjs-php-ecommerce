@@ -19,9 +19,7 @@ export default function SearchPage() {
   const fetchResults = async (q) => {
     try {
       const res = await fetch(
-        `http://localhost/ecommerce-nextjs/user_area/api/get_search_results.php?query=${encodeURIComponent(
-          q
-        )}`
+        `https://shop-sphere.infinityfreeapp.com/api/user/get_search_results.php?query=${encodeURIComponent(q)}`
       );
       const data = await res.json();
       setProducts(data);
@@ -48,7 +46,7 @@ export default function SearchPage() {
               className="bg-white rounded-lg shadow-md hover:shadow-xl transform hover:scale-105 transition duration-300 p-4"
             >
               <img
-                src={`http://localhost/ecommerce-nextjs/admin_area/product_images/${prod.product_image1}`}
+                src={`https://shop-sphere.infinityfreeapp.com/api/admin/product_images/${prod.product_image1}`}
                 alt={prod.product_title}
                 className="w-full h-40 object-cover mb-4 rounded"
               />

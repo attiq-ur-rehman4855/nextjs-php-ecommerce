@@ -76,7 +76,7 @@ export default function Signup() {
 
     try {
       const res = await fetch(
-        "http://localhost/ecommerce-nextjs/admin_area/api/admin_signup.php",
+        "https://shop-sphere.infinityfreeapp.com/api/admin/admin_signup.php",
         {
           method: "POST",
           body: formData,

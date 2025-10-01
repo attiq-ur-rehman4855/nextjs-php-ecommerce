@@ -36,7 +36,7 @@ export default function ChangePassword() {
 
     try {
       const res = await fetch(
-        "http://localhost/ecommerce-nextjs/admin_area/api/change_password.php",
+        "https://shop-sphere.infinityfreeapp.com/api/admin/change_password.php",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

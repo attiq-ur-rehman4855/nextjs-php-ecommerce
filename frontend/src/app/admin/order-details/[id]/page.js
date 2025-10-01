@@ -11,7 +11,7 @@ export default function OrderDetail() {
     if (!id) return;
 
     fetch(
-      `http://localhost/ecommerce-nextjs/admin_area/api/get_order_details.php?order_id=${id}`
+      `https://shop-sphere.infinityfreeapp.com/api/admin/get_order_details.php?order_id=${id}`
     )
       .then((res) => res.json())
       .then((data) => {
@@ -27,7 +27,7 @@ export default function OrderDetail() {
 
   const markDelivered = () => {
     fetch(
-      "http://localhost/ecommerce-nextjs/admin_area/api/update_order_status.php",
+      "https://shop-sphere.infinityfreeapp.com/api/admin/update_order_status.php",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },

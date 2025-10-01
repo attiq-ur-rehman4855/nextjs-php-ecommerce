@@ -28,7 +28,7 @@ export default function LoginPage() {
 
     try {
       const res = await fetch(
-        "http://localhost/ecommerce-nextjs/user_area/api/login.php",
+        "https://shop-sphere.infinityfreeapp.com/api/user/login.php",
         {
           method: "POST",
           body: formData,

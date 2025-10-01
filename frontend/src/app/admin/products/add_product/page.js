@@ -20,12 +20,12 @@ export default function AddProduct() {
 
   useEffect(() => {
     // Fetch Categories
-    fetch("http://localhost/ecommerce-nextjs/admin_area/api/get_categories.php")
+    fetch("https://shop-sphere.infinityfreeapp.com/api/admin/get_categories.php")
       .then((res) => res.json())
       .then((data) => setCategories(data));
 
     // Fetch Brands
-    fetch("http://localhost/ecommerce-nextjs/admin_area/api/get_brands.php")
+    fetch("https://shop-sphere.infinityfreeapp.com/api/admin/get_brands.php")
       .then((res) => res.json())
       .then((data) => setBrands(data));
   }, []);
@@ -49,7 +49,7 @@ export default function AddProduct() {
 
     try {
       const res = await fetch(
-        "http://localhost/ecommerce-nextjs/admin_area/api/insert_product.php",
+        "https://shop-sphere.infinityfreeapp.com/api/admin/insert_product.php",
         {
           method: "POST",
           body: productData,

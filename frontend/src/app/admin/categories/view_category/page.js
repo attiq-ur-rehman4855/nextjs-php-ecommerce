@@ -13,7 +13,7 @@ export default function ViewCategories() {
   const fetchCategories = async () => {
     try {
       const res = await fetch(
-        "http://localhost/ecommerce-nextjs/admin_area/api/get_categories.php"
+        "https://shop-sphere.infinityfreeapp.com/api/admin/get_categories.php"
       );
       const data = await res.json();
       setCategories(data);
@@ -30,7 +30,7 @@ export default function ViewCategories() {
 
     try {
       const res = await fetch(
-        "http://localhost/ecommerce-nextjs/admin_area/api/delete_category.php",
+        "https://shop-sphere.infinityfreeapp.com/api/admin/delete_category.php",
         {
           method: "POST",
           body: formData,

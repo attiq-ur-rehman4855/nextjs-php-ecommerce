@@ -17,7 +17,7 @@ export default function EditProfile() {
   useEffect(() => {
     if (adminId) {
       fetch(
-        `http://localhost/ecommerce-nextjs/admin_area/api/get_admin_profile.php?admin_id=${adminId}`
+        `https://shop-sphere.infinityfreeapp.com/api/admin/get_admin_profile.php?admin_id=${adminId}`
       )
         .then((res) => res.json())
         .then((data) => {
@@ -29,7 +29,7 @@ export default function EditProfile() {
               image: null,
             });
             setPreview(
-              `http://localhost/ecommerce-nextjs/admin_area/admin_images/${data.data.image}`
+              `https://shop-sphere.infinityfreeapp.com/api/admin/admin_images/${data.data.image}`
             );
           }
         });
@@ -59,7 +59,7 @@ export default function EditProfile() {
     }
 
     fetch(
-      "http://localhost/ecommerce-nextjs/admin_area/api/update_admin_profile.php",
+      "https://shop-sphere.infinityfreeapp.com/api/admin/update_admin_profile.php",
       {
         method: "POST",
         body: formDataToSend,

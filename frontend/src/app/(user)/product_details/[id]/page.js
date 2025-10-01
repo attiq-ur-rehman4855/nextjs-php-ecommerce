@@ -16,7 +16,7 @@ export default function ProductDetails() {
   const fetchProductDetails = async () => {
     try {
       const res = await fetch(
-        `http://localhost/ecommerce-nextjs/user_area/api/get_product_details.php?id=${id}`
+        `https://shop-sphere.infinityfreeapp.com/api/user/get_product_details.php?id=${id}`
       );
       const data = await res.json();
 
@@ -52,7 +52,7 @@ export default function ProductDetails() {
 
     try {
       const res = await fetch(
-        "http://localhost/ecommerce-nextjs/user_area/api/add_to_cart.php",
+        "https://shop-sphere.infinityfreeapp.com/api/user/add_to_cart.php",
         {
           method: "POST",
           body: formData,
@@ -80,7 +80,7 @@ export default function ProductDetails() {
         {/* Left: Main Image + Thumbnails */}
         <div className="md:w-1/2">
           <img
-            src={`http://localhost/ecommerce-nextjs/admin_area/product_images/${mainImage}`}
+            src={`https://shop-sphere.infinityfreeapp.com/api/admin/product_images/${mainImage}`}
             alt="Main Product"
             className="w-full h-[350px] object-cover rounded mb-4"
           />
@@ -92,7 +92,7 @@ export default function ProductDetails() {
             ].map((img, index) => (
               <img
                 key={index}
-                src={`http://localhost/ecommerce-nextjs/admin_area/product_images/${img}`}
+                src={`https://shop-sphere.infinityfreeapp.com/api/admin/product_images/${img}`}
                 alt={`Thumbnail ${index + 1}`}
                 className="w-15 h-15 object-cover rounded cursor-pointer border border-gray-300 hover:border-yellow-400"
                 onMouseEnter={() => setMainImage(img)}
