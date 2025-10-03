@@ -27,19 +27,16 @@ export default function LoginPage() {
     formData.append("password", password);
 
     try {
-      const res = await fetch(
-        "https://shop-sphere.infinityfreeapp.com/api/user/login.php",
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
+      const res = await fetch("/api/user/login.php", {
+        method: "POST",
+        body: formData,
+      });
 
       const data = await res.json();
       setMsg(data.message);
 
       if (data.status === "success") {
-        login(data.user_id,data.user_name,data.user_email,data.user_phone); // this login is in authContext.js
+        login(data.user_id, data.user_name, data.user_email, data.user_phone); // this login is in authContext.js
         router.push("/");
       }
     } catch (error) {
