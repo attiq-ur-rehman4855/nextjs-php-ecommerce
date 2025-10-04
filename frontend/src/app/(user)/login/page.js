@@ -10,12 +10,12 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [msg, setMsg] = useState("");
   const router = useRouter();
-  const { login } = useAuth(); // use context login function
+  const { login } = useAuth();
 
   useEffect(() => {
     if (msg) {
       alert(msg);
-      setMsg(""); // Clear the message after showing alert
+      setMsg("");
     }
   }, [msg]);
 
@@ -27,19 +27,22 @@ export default function LoginPage() {
     formData.append("password", password);
 
     try {
-      const res = await fetch(
-        "https://shop-sphere.infinityfreeapp.com/api/user/login.php",
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
+      // Call our own Next.js API (proxy)
+      const res = await fetch("/api/login", {
+        method: "POST",
+        body: formData,
+      });
 
       const data = await res.json();
       setMsg(data.message);
 
       if (data.status === "success") {
-        login(data.user_id,data.user_name,data.user_email,data.user_phone); // this login is in authContext.js
+        login(
+          data.user_id,
+          data.user_name,
+          data.user_email,
+          data.user_phone
+        );
         router.push("/");
       }
     } catch (error) {
