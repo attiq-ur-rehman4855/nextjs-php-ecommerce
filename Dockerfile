@@ -1,10 +1,10 @@
 FROM php:8.2-apache
 
-# MySQL extensions install karne ke liye (Aiven connection ke liye zaroori hai)
+# MySQL extensions install karne ke liye
 RUN docker-php-ext-install mysqli pdo pdo_mysql
 
-# Aapka saara code Apache ki public directory mein copy karne ke liye
-COPY . /var/www/html/
+# Sirf backend folder ke code ko Apache ki public directory mein copy karein
+COPY backend/ /var/www/html/
 
 # Apache ports set karna
 EXPOSE 80
