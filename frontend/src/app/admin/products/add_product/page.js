@@ -1,6 +1,9 @@
 "use client";
 import { useState, useEffect } from "react";
 
+// Aapka AwardSpace Live Subdomain URL
+const BASE_URL = "http://attiq-ecommerce-api.atwebpages.com";
+
 export default function AddProduct() {
   const [formData, setFormData] = useState({
     title: "",
@@ -17,17 +20,20 @@ export default function AddProduct() {
   const [categories, setCategories] = useState([]);
   const [brands, setBrands] = useState([]);
   const [msg, setMsg] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     // Fetch Categories
-    fetch("https://shop-sphere.infinityfreeapp.com/api/admin/get_categories.php")
+    fetch(`${BASE_URL}/admin_area/api/get_categories.php`)
       .then((res) => res.json())
-      .then((data) => setCategories(data));
+      .then((data) => setCategories(Array.isArray(data) ? data : []))
+      .catch((err) => console.error("Error fetching categories:", err));
 
     // Fetch Brands
-    fetch("https://shop-sphere.infinityfreeapp.com/api/admin/get_brands.php")
+    fetch(`${BASE_URL}/admin_area/api/get_brands.php`)
       .then((res) => res.json())
-      .then((data) => setBrands(data));
+      .then((data) => setBrands(Array.isArray(data) ? data : []))
+      .catch((err) => console.error("Error fetching brands:", err));
   }, []);
 
   const handleChange = (e) => {
@@ -41,6 +47,8 @@ export default function AddProduct() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setMsg("");
 
     const productData = new FormData();
     for (const key in formData) {
@@ -49,7 +57,7 @@ export default function AddProduct() {
 
     try {
       const res = await fetch(
-        "https://shop-sphere.infinityfreeapp.com/api/admin/insert_product.php",
+        `${BASE_URL}/admin_area/api/insert_product.php`,
         {
           method: "POST",
           body: productData,
@@ -60,7 +68,6 @@ export default function AddProduct() {
       setMsg(data.message);
       if (data.status === "success") {
         alert("Product added successfully");
-        // Clear form
         setFormData({
           title: "",
           description: "",
@@ -72,18 +79,19 @@ export default function AddProduct() {
           brand: "",
           keywords: "",
         });
-        setMsg("");
       }
     } catch (error) {
-      setMsg("Error adding product.");
+      setMsg("Error adding product. Please check your connection.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gray-50 p-4 sm:p-6">
       <form
         onSubmit={handleSubmit}
-        className="bg-white p-6 rounded shadow-md space-y-4 max-w-lg mx-auto"
+        className="bg-white p-6 sm:p-8 rounded-lg shadow-md space-y-4 max-w-lg mx-auto"
         encType="multipart/form-data"
       >
         <h2 className="text-2xl font-bold mb-6 text-indigo-600 text-center">
@@ -97,7 +105,7 @@ export default function AddProduct() {
           value={formData.title}
           onChange={handleChange}
           required
-          className="w-full p-2 border rounded"
+          className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-indigo-400 outline-none"
         />
 
         <textarea
@@ -106,7 +114,8 @@ export default function AddProduct() {
           value={formData.description}
           onChange={handleChange}
           required
-          className="w-full p-2 border rounded"
+          rows="4"
+          className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-indigo-400 outline-none"
         ></textarea>
 
         <input
@@ -116,64 +125,29 @@ export default function AddProduct() {
           value={formData.price}
           onChange={handleChange}
           required
-          className="w-full p-2 border rounded"
+          className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-indigo-400 outline-none"
         />
 
-        {/* Images Upload */}
-        {/* Image Upload - Custom Button */}
-        <div>
-          <label
-            htmlFor="image1"
-            className="block w-full cursor-pointer bg-gray-100 border border-gray-300 text-gray-700 rounded-md p-2 text-center hover:bg-gray-200"
-          >
-            {formData.image1 ? formData.image1.name : "Upload Image 1"}
-          </label>
-          <input
-            id="image1"
-            type="file"
-            name="image1"
-            accept="image/*"
-            onChange={handleChange}
-            required
-            className="hidden"
-          />
-        </div>
-
-        <div>
-          <label
-            htmlFor="image2"
-            className="block w-full cursor-pointer bg-gray-100 border border-gray-300 text-gray-700 rounded-md p-2 text-center hover:bg-gray-200"
-          >
-            {formData.image2 ? formData.image2.name : "Upload Image 2"}
-          </label>
-          <input
-            id="image2"
-            type="file"
-            name="image2"
-            accept="image/*"
-            onChange={handleChange}
-            required
-            className="hidden"
-          />
-        </div>
-
-        <div>
-          <label
-            htmlFor="image3"
-            className="block w-full cursor-pointer bg-gray-100 border border-gray-300 text-gray-700 rounded-md p-2 text-center hover:bg-gray-200"
-          >
-            {formData.image3 ? formData.image3.name : "Upload Image 3"}
-          </label>
-          <input
-            id="image3"
-            type="file"
-            name="image3"
-            accept="image/*"
-            onChange={handleChange}
-            required
-            className="hidden"
-          />
-        </div>
+        {/* Image Uploads */}
+        {[1, 2, 3].map((num) => (
+          <div key={num}>
+            <label
+              htmlFor={`image${num}`}
+              className="block w-full cursor-pointer bg-gray-100 border border-gray-300 text-gray-700 rounded-md p-2 text-center hover:bg-gray-200"
+            >
+              {formData[`image${num}`] ? formData[`image${num}`].name : `Upload Image ${num}`}
+            </label>
+            <input
+              id={`image${num}`}
+              type="file"
+              name={`image${num}`}
+              accept="image/*"
+              onChange={handleChange}
+              required
+              className="hidden"
+            />
+          </div>
+        ))}
 
         {/* Category Dropdown */}
         <select
@@ -181,7 +155,7 @@ export default function AddProduct() {
           value={formData.category}
           onChange={handleChange}
           required
-          className="w-full p-2 border rounded"
+          className="w-full p-2 border border-gray-300 rounded"
         >
           <option value="">Select Category</option>
           {categories.map((cat) => (
@@ -197,7 +171,7 @@ export default function AddProduct() {
           value={formData.brand}
           onChange={handleChange}
           required
-          className="w-full p-2 border rounded"
+          className="w-full p-2 border border-gray-300 rounded"
         >
           <option value="">Select Brand</option>
           {brands.map((brand) => (
@@ -214,17 +188,22 @@ export default function AddProduct() {
           value={formData.keywords}
           onChange={handleChange}
           required
-          className="w-full p-2 border rounded"
+          className="w-full p-2 border border-gray-300 rounded"
         />
 
         <button
           type="submit"
-          className="w-full bg-indigo-600 text-white py-2 rounded hover:bg-indigo-700"
+          disabled={loading}
+          className="w-full bg-indigo-600 text-white py-2 rounded hover:bg-indigo-700 disabled:opacity-50 font-semibold"
         >
-          Add Product
+          {loading ? "Adding..." : "Add Product"}
         </button>
 
-        {msg && <p className="text-center text-green-600">{msg}</p>}
+        {msg && (
+          <p className={`text-center font-medium ${msg.includes("success") ? "text-green-600" : "text-red-600"}`}>
+            {msg}
+          </p>
+        )}
       </form>
     </div>
   );

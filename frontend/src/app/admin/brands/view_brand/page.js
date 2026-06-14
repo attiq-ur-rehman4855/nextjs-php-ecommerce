@@ -2,6 +2,9 @@
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 
+// Aapka AwardSpace Live Subdomain URL
+const BASE_URL = "http://attiq-ecommerce-api.atwebpages.com";
+
 export default function ViewBrands() {
   const [brands, setBrands] = useState([]);
   const [msg, setMsg] = useState("");
@@ -15,7 +18,7 @@ export default function ViewBrands() {
     if (msg) {
       const timer = setTimeout(() => {
         setMsg(""); 
-      }, 1000); 
+      }, 2000); // Thoda time badhaya taake user alert ya text asani se read kar sake
 
       return () => clearTimeout(timer); // cleanup
     }
@@ -23,11 +26,14 @@ export default function ViewBrands() {
 
   const fetchBrands = async () => {
     try {
-      const res = await fetch(
-        "https://shop-sphere.infinityfreeapp.com/api/admin/get_brands.php"
-      );
+      // Updated to AwardSpace Admin Area Endpoint
+      const res = await fetch(`${BASE_URL}/admin_area/api/get_brands.php`);
       const data = await res.json();
-      setBrands(data);
+      if (Array.isArray(data)) {
+        setBrands(data);
+      } else {
+        setBrands([]);
+      }
     } catch (error) {
       setMsg("Error fetching brands.");
     }
@@ -40,8 +46,9 @@ export default function ViewBrands() {
     formData.append("brand_id", id);
 
     try {
+      // Updated to AwardSpace Admin Area Endpoint
       const res = await fetch(
-        "https://shop-sphere.infinityfreeapp.com/api/admin/delete_brand.php",
+        `${BASE_URL}/admin_area/api/delete_brand.php`,
         {
           method: "POST",
           body: formData,
@@ -51,7 +58,7 @@ export default function ViewBrands() {
       const data = await res.json();
       setMsg(data.message);
       if (data.status === "success") {
-        fetchBrands(); // Refresh list
+        fetchBrands(); // Refresh list automatically
       }
     } catch (error) {
       setMsg("Error deleting brand.");
@@ -69,7 +76,7 @@ export default function ViewBrands() {
           <p className="mb-4 text-center text-red-500 font-medium">{msg}</p>
         )}
 
-        {/* ✅ Responsive Table Wrapper */}
+        {/* Responsive Table Wrapper */}
         <div className="overflow-x-auto">
           <table className="w-full border-collapse">
             <thead className="bg-gray-200">
@@ -85,12 +92,12 @@ export default function ViewBrands() {
                   key={brand.brand_id}
                   className="border-t hover:bg-gray-50 text-sm sm:text-base"
                 >
-                  <td className="px-2 sm:px-3 py-2">{brand.brand_id}</td>
-                  <td className="px-2 sm:px-3 py-2">{brand.brand_title}</td>
-                  <td className="px-2 sm:px-3 py-2 flex gap-2 flex-nowrap">
+                  <td className="px-2 sm:px-3 py-2 text-left">{brand.brand_id}</td>
+                  <td className="px-2 sm:px-3 py-2 text-left">{brand.brand_title}</td>
+                  <td className="px-2 sm:px-3 py-2 flex gap-2 flex-nowrap justify-start">
                     {/* Edit Button */}
                     <button
-                      className="bg-yellow-400 px-3 py-1 rounded hover:bg-yellow-300"
+                      className="bg-yellow-400 px-3 py-1 rounded hover:bg-yellow-300 transition duration-150 text-black text-xs sm:text-sm font-medium"
                       onClick={() =>
                         router.push(
                           `/admin/brands/edit_brand?id=${brand.brand_id}`
@@ -102,7 +109,7 @@ export default function ViewBrands() {
 
                     {/* Delete Button */}
                     <button
-                      className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-400"
+                      className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-400 transition duration-150 text-xs sm:text-sm font-medium"
                       onClick={() => deleteBrand(brand.brand_id)}
                     >
                       Delete

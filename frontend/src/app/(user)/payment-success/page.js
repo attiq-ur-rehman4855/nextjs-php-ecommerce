@@ -2,6 +2,12 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/authContext";
 
+
+
+// Aapka AwardSpace Live Subdomain URL
+const BASE_URL = "http://attiq-ecommerce-api.atwebpages.com";
+
+
 const PaymentSuccess = () => {
   const [message, setMessage] = useState("Placing your order...");
   const { fetchCartCount } = useAuth();
@@ -31,7 +37,7 @@ const PaymentSuccess = () => {
 
     if (session_id && user_id) {
       fetch(
-        "https://shop-sphere.infinityfreeapp.com/api/user/place_order_stripe.php",
+        `${BASE_URL}/user_area/api/place_order_stripe.php`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

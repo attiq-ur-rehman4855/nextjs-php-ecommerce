@@ -5,32 +5,31 @@ import { useAuth } from "../context/authContext";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
+// Aapka AwardSpace Live Subdomain URL
+const BASE_URL = "http://attiq-ecommerce-api.atwebpages.com"; 
+
 export default function CartPage() {
   const { isLoggedIn, userId, fetchCartCount } = useAuth();
   const [items, setItems] = useState([]);
   const [msg, setMsg] = useState("");
   const router = useRouter();
 
-  // useEffect(() => {
-  //   if (!isLoggedIn) {
-  //     router.push("/login");
-  //   } else {
-  //     fetchCartItems();
-  //   }
-  // }, [isLoggedIn]);
-
   useEffect(() => {
-    fetchCartItems();
-  });
+    if (userId) {
+      fetchCartItems();
+    }
+  }, [userId]);
+
   const fetchCartItems = async () => {
     try {
+      // Live routing as per AwardSpace folder setup: user_area/api/
       const res = await fetch(
-        `https://shop-sphere.infinityfreeapp.com/api/user/get_cart_items.php?user_id=${userId}`
+        `${BASE_URL}/user_area/api/get_cart_items.php?user_id=${userId}`
       );
       const data = await res.json();
-      if (data.length) {
+      if (data && data.length) {
         setItems(data);
-        setMsg(""); // clear old messages
+        setMsg(""); 
       } else {
         setItems([]);
         setMsg("Your cart is empty.");
@@ -43,7 +42,7 @@ export default function CartPage() {
   const handleRemove = async (itemId) => {
     try {
       const res = await fetch(
-        `https://shop-sphere.infinityfreeapp.com/api/user/remove_cart_item.php?id=${itemId}`
+        `${BASE_URL}/user_area/api/remove_cart_item.php?id=${itemId}`
       );
       const data = await res.json();
       if (data.status === "success") {
@@ -59,7 +58,7 @@ export default function CartPage() {
     if (newQty < 1) return;
     try {
       const res = await fetch(
-        "http://shop-sphere.infinityfreeapp.com/api/user/update_cart_quantity.php",
+        `${BASE_URL}/user_area/api/update_cart_quantity.php`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -101,9 +100,13 @@ export default function CartPage() {
               {/* Left Side: Image + Details */}
               <div className="flex items-center gap-4">
                 <img
-                  src={`https://shop-sphere.infinityfreeapp.com/api/admin/product_images/${item.product_image}`}
+                  src={`${BASE_URL}/admin_area/admin_images/${item.product_image}`}
                   alt={item.product_title}
                   className="w-20 h-20 object-cover rounded"
+                  onError={(e) => {
+                    // Agar image server par na ho to app crash nahi karegi, placeholder dikhega
+                    e.target.src = "https://placehold.co/150"; 
+                  }}
                 />
                 <div>
                   <h3 className="font-semibold text-gray-800">

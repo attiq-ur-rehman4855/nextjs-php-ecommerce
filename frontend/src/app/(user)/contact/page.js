@@ -4,6 +4,9 @@ import { useState, useEffect } from "react";
 import { useAuth } from "../context/authContext";
 import { Mail, Phone, MapPin, Facebook, Twitter, Instagram, Youtube } from "lucide-react";
 
+// Aapka AwardSpace Live Subdomain URL
+const BASE_URL = "http://attiq-ecommerce-api.atwebpages.com";
+
 export default function Contact() {
   const { userName, userEmail, isLoggedIn } = useAuth();
   const [form, setForm] = useState({ name: "", email: "", message: "" });
@@ -50,7 +53,8 @@ export default function Contact() {
     }
 
     try {
-      const res = await fetch("https://shop-sphere.infinityfreeapp.com/api/user/save_message.php", {
+      // Updated Endpoint to AwardSpace structure
+      const res = await fetch(`${BASE_URL}/user_area/api/save_message.php`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),

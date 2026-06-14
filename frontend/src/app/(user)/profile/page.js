@@ -3,6 +3,9 @@ import { useState, useEffect } from "react";
 import { useAuth } from "../context/authContext";
 import Link from "next/link";
 
+// Aapka AwardSpace Live Subdomain URL
+const BASE_URL = "http://attiq-ecommerce-api.atwebpages.com";
+
 export default function UserProfile() {
   const [activeTab, setActiveTab] = useState("info");
   const { logout, isLoggedIn, isAuthChecking } = useAuth();
@@ -29,31 +32,32 @@ export default function UserProfile() {
 
   useEffect(() => {
     const id = sessionStorage.getItem("user_id");
-    fetch(
-      `https://shop-sphere.infinityfreeapp.com/api/user/get_user.php?id=${id}`
-    )
+    if (!id) return;
+    
+    // Updated to AwardSpace Endpoint
+    fetch(`${BASE_URL}/user_area/api/get_user.php?id=${id}`)
       .then((res) => res.json())
       .then((data) => {
         setUserData(data);
         setFormData({
-          name: data.name,
-          email: data.email,
-          phone: data.phone,
+          name: data.name || "",
+          email: data.email || "",
+          phone: data.phone || "",
           image: null,
         });
         setPreviewImage(
-          `https://shop-sphere.infinityfreeapp.com/api/user/user_images/${data.image}`
+          `${BASE_URL}/user_area/user_images/${data.image}`
         );
-      });
+      })
+      .catch((err) => console.error("Error fetching user data:", err));
   }, []);
 
   useEffect(() => {
     const userId = sessionStorage.getItem("user_id");
     if (activeTab === "orders" && userId) {
       setLoadingOrders(true);
-      fetch(
-        `https://shop-sphere.infinityfreeapp.com/api/user/get_user_orders.php?user_id=${userId}`
-      )
+      // Updated to AwardSpace Endpoint
+      fetch(`${BASE_URL}/user_area/api/get_user_orders.php?user_id=${userId}`)
         .then((res) => res.json())
         .then((data) => {
           setOrders(data);
@@ -69,8 +73,9 @@ export default function UserProfile() {
       delete updated[orderId];
       setOrderDetails(updated);
     } else {
+      // Updated to AwardSpace Endpoint
       const res = await fetch(
-        `https://shop-sphere.infinityfreeapp.com/api/user/get_order_details.php?order_id=${orderId}`
+        `${BASE_URL}/user_area/api/get_order_details.php?order_id=${orderId}`
       );
       const data = await res.json();
       setOrderDetails((prev) => ({ ...prev, [orderId]: data }));
@@ -79,7 +84,7 @@ export default function UserProfile() {
 
   const handleEditChange = (e) => {
     const { name, value, files } = e.target;
-    if (name === "image") {
+    if (name === "image" && files && files[0]) {
       setFormData({ ...formData, image: files[0] });
       setPreviewImage(URL.createObjectURL(files[0]));
     } else {
@@ -100,8 +105,9 @@ export default function UserProfile() {
     }
 
     try {
+      // Updated to AwardSpace Endpoint
       const res = await fetch(
-        "https://shop-sphere.infinityfreeapp.com/api/user/update_profile.php",
+        `${BASE_URL}/user_area/api/update_profile.php`,
         {
           method: "POST",
           body: form,
@@ -150,8 +156,9 @@ export default function UserProfile() {
 
     const userId = sessionStorage.getItem("user_id");
     try {
+      // Updated to AwardSpace Endpoint
       const res = await fetch(
-        "https://shop-sphere.infinityfreeapp.com/api/user/change_password.php",
+        `${BASE_URL}/user_area/api/change_password.php`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -215,7 +222,7 @@ export default function UserProfile() {
       <div className="max-w-6xl mx-auto bg-white shadow-md rounded-lg overflow-hidden">
         <div className="flex flex-col md:flex-row">
           {/* Sidebar */}
-          <div className="bg-gray-800 text-white w-full md:w-1/3 lg:w-1/4 p-4 md:min-h-screen">
+          <div className="bg-gray-800 text-white w-full md:w-1/3 lg:w-1/4 p-4 md:min-h-screen text-left">
             <h2 className="text-xl font-bold mb-4">My Account</h2>
             <ul className="space-y-2">
               <li>
@@ -260,7 +267,7 @@ export default function UserProfile() {
           </div>
 
           {/* Main content */}
-          <div className="w-full md:w-2/3 lg:w-3/4 p-6 sm:p-8">
+          <div className="w-full md:w-2/3 lg:w-3/4 p-6 sm:p-8 text-left">
             {activeTab === "info" && (
               <div>
                 <h3 className="text-xl font-semibold mb-4">User Information</h3>
@@ -268,7 +275,10 @@ export default function UserProfile() {
                   <img
                     src={previewImage}
                     alt="Profile"
-                    className="w-28 h-28 rounded-full object-cover"
+                    className="w-28 h-28 rounded-full object-cover mb-4 border"
+                    onError={(e) => {
+                      e.target.src = "https://cdn-icons-png.flaticon.com/512/3177/3177440.png";
+                    }}
                   />
                   <p>
                     <strong>Name:</strong> {userData.name}
@@ -277,58 +287,63 @@ export default function UserProfile() {
                     <strong>Email:</strong> {userData.email}
                   </p>
                   <p>
-                    <strong>Phone:</strong> {userData.phone}
+                    <strong>Phone:</strong> {userData.phone || "Not Provided"}
                   </p>
                 </div>
                 <button
-                  onClick={() => setShowEditForm(true)}
+                  onClick={() => setShowEditForm(!showEditForm)}
                   className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
                 >
-                  ✏️ Edit Account
+                  ✏️ {showEditForm ? "Cancel Editing" : "Edit Account"}
                 </button>
 
                 {showEditForm && (
                   <form
                     onSubmit={handleProfileUpdate}
-                    className="mt-6 space-y-4"
+                    className="mt-6 space-y-4 max-w-md"
                   >
-                    <input
-                      name="name"
-                      type="text"
-                      value={formData.name}
-                      onChange={handleEditChange}
-                      placeholder="Full Name"
-                      className="w-full p-2 border rounded"
-                    />
-                    <input
-                      name="email"
-                      type="email"
-                      value={formData.email}
-                      onChange={handleEditChange}
-                      placeholder="Email"
-                      className="w-full p-2 border rounded"
-                    />
-                    <input
-                      name="phone"
-                      type="text"
-                      value={formData.phone}
-                      onChange={handleEditChange}
-                      placeholder="Phone"
-                      className="w-full p-2 border rounded"
-                    />
-                    <input
-                      name="image"
-                      type="file"
-                      onChange={handleEditChange}
-                      className="w-full p-2 border rounded"
-                    />
-                    {previewImage && (
-                      <img
-                        src={previewImage}
-                        alt="Preview"
-                        className="w-24 h-24 rounded-full object-cover"
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                      <input
+                        name="name"
+                        type="text"
+                        value={formData.name}
+                        onChange={handleEditChange}
+                        className="w-full p-2 border rounded"
+                        required
                       />
-                    )}
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                      <input
+                        name="email"
+                        type="email"
+                        value={formData.email}
+                        onChange={handleEditChange}
+                        className="w-full p-2 border rounded"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+                      <input
+                        name="phone"
+                        type="text"
+                        value={formData.phone}
+                        onChange={handleEditChange}
+                        className="w-full p-2 border rounded"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Profile Image</label>
+                      <input
+                        name="image"
+                        type="file"
+                        accept="image/*"
+                        onChange={handleEditChange}
+                        className="w-full p-2 border rounded"
+                      />
+                    </div>
                     <button
                       type="submit"
                       className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
@@ -345,14 +360,14 @@ export default function UserProfile() {
                 <h3 className="text-xl font-semibold mb-4">Order History</h3>
                 {loadingOrders ? (
                   <p>Loading orders...</p>
-                ) : orders.length === 0 ? (
+                ) : !orders || orders.length === 0 ? (
                   <p>No orders found.</p>
                 ) : (
                   <div className="space-y-4">
                     {orders.map((order) => (
                       <div
                         key={order.id}
-                        className="border p-4 rounded shadow-sm"
+                        className="border p-4 rounded shadow-sm bg-gray-50"
                       >
                         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2">
                           <div className="text-sm space-y-1">
@@ -360,7 +375,10 @@ export default function UserProfile() {
                               <strong>Order ID:</strong> #{order.id}
                             </p>
                             <p className="capitalize">
-                              <strong>Status:</strong> {order.order_status}
+                              <strong>Status:</strong>{" "}
+                              <span className={order.order_status === "delivered" ? "text-green-600 font-medium" : "text-amber-600 font-medium"}>
+                                {order.order_status}
+                              </span>
                             </p>
                             <p>
                               <strong>Total:</strong> Rs. {order.total_amount}
@@ -376,34 +394,35 @@ export default function UserProfile() {
                           <div className="flex flex-col gap-2">
                             <button
                               onClick={() => toggleOrderDetails(order.id)}
-                              className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
+                              className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 text-xs sm:text-sm"
                             >
-                              {orderDetails[order.id]
-                                ? "Hide Details"
-                                : "View Details"}
+                              {orderDetails[order.id] ? "Hide Details" : "View Details"}
                             </button>
                           </div>
                         </div>
 
                         {orderDetails[order.id] && (
                           <div className="mt-4 border-t pt-3 space-y-2 text-sm overflow-x-auto">
-                            <div className="font-semibold grid grid-cols-4 sm:grid-cols-4 gap-4 sm:gap-4">
-                              <span>Product</span>
-                              <span>Price</span>
-                              <span>Qty</span>
-                              <span>Subtotal</span>
-                            </div>
-                            {orderDetails[order.id].map((item) => (
-                              <div
-                                key={item.id}
-                                className="grid grid-cols-4 sm:grid-cols-4 gap-4 sm:gap-4 border-b py-1"
-                              >
-                                <span>{item.product_name}</span>
-                                <span>Rs. {item.price}</span>
-                                <span>{item.quantity}</span>
-                                <span>Rs. {item.subtotal}</span>
-                              </div>
-                            ))}
+                            <table className="w-full text-left min-w-[400px]">
+                              <thead>
+                                <tr className="font-semibold border-b pb-2">
+                                  <th className="py-1">Product</th>
+                                  <th className="py-1">Price</th>
+                                  <th className="py-1">Qty</th>
+                                  <th className="py-1">Subtotal</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {orderDetails[order.id].map((item) => (
+                                  <tr key={item.id} className="border-b py-1">
+                                    <td className="py-2">{item.product_name}</td>
+                                    <td className="py-2">Rs. {item.price}</td>
+                                    <td className="py-2">{item.quantity}</td>
+                                    <td className="py-2">Rs. {item.subtotal}</td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
                           </div>
                         )}
                       </div>
@@ -426,6 +445,7 @@ export default function UserProfile() {
                     className="w-full p-2 border rounded"
                     value={currentPassword}
                     onChange={(e) => setCurrentPassword(e.target.value)}
+                    required
                   />
                   <input
                     type="password"
@@ -433,6 +453,7 @@ export default function UserProfile() {
                     className="w-full p-2 border rounded"
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
+                    required
                   />
                   <input
                     type="password"
@@ -440,6 +461,7 @@ export default function UserProfile() {
                     className="w-full p-2 border rounded"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
+                    required
                   />
                   <button
                     type="submit"

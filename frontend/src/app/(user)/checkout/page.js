@@ -4,6 +4,9 @@ import { useState, useEffect } from "react";
 import { useAuth } from "../context/authContext";
 import { useRouter } from "next/navigation";
 
+// Aapka AwardSpace Live Subdomain URL
+const BASE_URL = "http://attiq-ecommerce-api.atwebpages.com";
+
 export default function CheckoutPage() {
   const { userId, fetchCartCount } = useAuth();
   const router = useRouter();
@@ -35,17 +38,22 @@ export default function CheckoutPage() {
       email: storedEmail,
       phone: storedPhone,
     }));
-    fetch(
-      `https://shop-sphere.infinityfreeapp.com/api/user/get_cart_items.php?user_id=${userId}`
-    )
+
+    // Updated to AwardSpace Endpoint structure
+    fetch(`${BASE_URL}/user_area/api/get_cart_items.php?user_id=${userId}`)
       .then((res) => res.json())
       .then((data) => {
-        setCartItems(data);
-        const calculatedTotal = data.reduce(
-          (acc, item) => acc + item.product_price * item.quantity,
-          0
-        );
-        setTotal(calculatedTotal);
+        if (data && data.length) {
+          setCartItems(data);
+          const calculatedTotal = data.reduce(
+            (acc, item) => acc + item.product_price * item.quantity,
+            0
+          );
+          setTotal(calculatedTotal);
+        } else {
+          setCartItems([]);
+          setTotal(0);
+        }
       })
       .catch((err) => {
         console.error("Error fetching cart items:", err);
@@ -96,8 +104,9 @@ export default function CheckoutPage() {
       }
 
       try {
+        // Updated COD Endpoint to AwardSpace setup
         const res = await fetch(
-          "https://shop-sphere.infinityfreeapp.com/api/user/place_order_cod.php",
+          `${BASE_URL}/user_area/api/place_order_cod.php`,
           {
             method: "POST",
             headers: {
@@ -123,6 +132,7 @@ export default function CheckoutPage() {
       }
     } else if (paymentMethod === "online") {
       try {
+        // Internal Next.js API Route call (remains same)
         const res = await fetch("/api/create-stripe-session", {
           method: "POST",
           headers: {
@@ -140,7 +150,7 @@ export default function CheckoutPage() {
         if (result.sessionId) {
           const stripe = await loadStripe(
             process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
-          ); // Replace with real key
+          );
           await stripe.redirectToCheckout({ sessionId: result.sessionId });
         } else {
           alert("Failed to create Stripe session");
@@ -160,6 +170,7 @@ export default function CheckoutPage() {
         <form className="space-y-4">
           <input
             type="text"
+            name="fullname"
             placeholder="Full Name"
             value={billingDetails.fullname}
             className="w-full border px-4 py-2 rounded"
@@ -226,9 +237,12 @@ export default function CheckoutPage() {
                 {/* Left Section */}
                 <div className="flex items-center gap-4 mb-2 sm:mb-0">
                   <img
-                    src={`https://shop-sphere.infinityfreeapp.com/api/admin/product_images/${item.product_image}`}
+                    src={`${BASE_URL}/admin_area/admin_images/${item.product_image}`}
                     alt={item.product_title}
                     className="w-16 h-16 object-cover rounded"
+                    onError={(e) => {
+                      e.target.src = "https://placehold.co/150";
+                    }}
                   />
                   <div>
                     <p className="font-semibold">{item.product_title}</p>

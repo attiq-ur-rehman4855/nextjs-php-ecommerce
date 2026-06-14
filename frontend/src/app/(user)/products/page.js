@@ -1,6 +1,10 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+
+// Aapka AwardSpace Live Subdomain URL
+const BASE_URL = "http://attiq-ecommerce-api.atwebpages.com";
+
 export default function ProductsPage() {
   const [products, setProducts] = useState([]);
   const [msg, setMsg] = useState("");
@@ -11,11 +15,17 @@ export default function ProductsPage() {
 
   const fetchProducts = async () => {
     try {
+      // Updated endpoint path to match AwardSpace folder structure
       const res = await fetch(
-        "https://shop-sphere.infinityfreeapp.com/api/admin/get_products.php"
+        `${BASE_URL}/admin_area/api/get_products.php`
       );
       const data = await res.json();
-      setProducts(data);
+      
+      if (Array.isArray(data)) {
+        setProducts(data);
+      } else {
+        setProducts([]);
+      }
     } catch (error) {
       setMsg("Error fetching products.");
     }
@@ -33,19 +43,25 @@ export default function ProductsPage() {
         {products.map((prod) => (
           <div
             key={prod.product_id}
-            className="bg-white rounded-lg shadow-md hover:shadow-xl transform hover:scale-105 transition duration-300 p-4 cursor-pointer"
+            className="bg-white rounded-lg shadow-md hover:shadow-xl transform hover:scale-105 transition duration-300 p-4 flex flex-col justify-between cursor-pointer"
           >
-            <img
-              src={`https://shop-sphere.infinityfreeapp.com/api/admin/product_images/${prod.product_image1}`}
-              alt={prod.product_title}
-              className="w-full h-40 object-cover mb-4 rounded-md"
-            />
-            <h3 className="text-lg font-semibold text-gray-700 mb-2">
-              {prod.product_title}
-            </h3>
-            <p className="text-green-600 font-bold text-md mb-2">
-              Rs. {prod.product_price}
-            </p>
+            <div>
+              <img
+                src={`${BASE_URL}/admin_area/admin_images/${prod.product_image1}`}
+                alt={prod.product_title}
+                className="w-full h-40 object-cover mb-4 rounded-md"
+                onError={(e) => {
+                  e.target.src = "https://placehold.co/300x200";
+                }}
+              />
+              <h3 className="text-lg font-semibold text-gray-700 mb-2 line-clamp-2 text-left">
+                {prod.product_title}
+              </h3>
+              <p className="text-green-600 font-bold text-md mb-2 text-left">
+                Rs. {prod.product_price}
+              </p>
+            </div>
+            
             <Link href={`/product_details/${prod.product_id}`}>
               <button className="mt-4 w-full bg-yellow-400 hover:bg-yellow-300 text-black font-semibold py-2 rounded transition duration-200">
                 View Details

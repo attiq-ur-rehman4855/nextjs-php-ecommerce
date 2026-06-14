@@ -1,10 +1,16 @@
 import Stripe from "stripe";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY); //  Secret Key
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 export async function POST(req) {
   const body = await req.json();
   const { userId, cartItems, billingDetails, total } = body;
+
+  // Vercel khud ba khud deployment ke waqt VERCEL_URL set karta hai. 
+  // Agar local hoga to http://localhost:3000 chalega, Vercel par hoga to automatic live link ban jayega.
+  const FRONTEND_URL = process.env.VERCEL_URL
+    ? `https://${process.env.VERCEL_URL}`
+    : "http://localhost:3000";
 
   try {
     const session = await stripe.checkout.sessions.create({
@@ -15,12 +21,12 @@ export async function POST(req) {
           product_data: {
             name: item.product_title,
           },
-          unit_amount: item.product_price * 100,
+          unit_amount: item.product_price * 100, 
         },
         quantity: item.quantity,
       })),
       mode: "payment",
-      success_url: `https://shop-sphere.infinityfreeapp.com/payment-success?session_id={CHECKOUT_SESSION_ID}&user_id=${userId}&fullname=${encodeURIComponent(
+      success_url: `${FRONTEND_URL}/payment-success?session_id={CHECKOUT_SESSION_ID}&user_id=${userId}&fullname=${encodeURIComponent(
         billingDetails.fullname
       )}&email=${encodeURIComponent(
         billingDetails.email
@@ -33,7 +39,7 @@ export async function POST(req) {
       )}&country=${encodeURIComponent(
         billingDetails.country
       )}&zip=${encodeURIComponent(billingDetails.zip)}`,
-      cancel_url: `https://shop-sphere.infinityfreeapp.com/checkout`,
+      cancel_url: `${FRONTEND_URL}/checkout`,
     });
 
     return Response.json({ sessionId: session.id });

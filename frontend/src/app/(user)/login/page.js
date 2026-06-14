@@ -5,6 +5,12 @@ import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/authContext";
 
+
+
+// Aapka AwardSpace Live Subdomain URL
+const BASE_URL = "http://attiq-ecommerce-api.atwebpages.com";
+
+
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -28,7 +34,7 @@ export default function LoginPage() {
 
     try {
       const res = await fetch(
-        "https://shop-sphere.infinityfreeapp.com/api/user/login.php",
+        `${BASE_URL}/user_area/api/login.php`,
         {
           method: "POST",
           body: formData,

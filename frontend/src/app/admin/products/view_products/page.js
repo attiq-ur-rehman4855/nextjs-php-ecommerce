@@ -1,34 +1,37 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation"; // for routing
+import { useRouter } from "next/navigation";
+
+// Aapka AwardSpace Live Subdomain URL
+const BASE_URL = "http://attiq-ecommerce-api.atwebpages.com";
 
 export default function ViewProducts() {
   const [products, setProducts] = useState([]);
   const [msg, setMsg] = useState("");
-  const router = useRouter(); // router hook
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     fetchProducts();
   }, []);
+
   useEffect(() => {
     if (msg) {
-      const timer = setTimeout(() => {
-        setMsg("");
-      }, 1000); // 1 second
-
-      return () => clearTimeout(timer); // cleanup
+      const timer = setTimeout(() => setMsg(""), 3000);
+      return () => clearTimeout(timer);
     }
   }, [msg]);
 
   const fetchProducts = async () => {
+    setLoading(true);
     try {
-      const res = await fetch(
-        "https://shop-sphere.infinityfreeapp.com/api/admin/get_products.php"
-      );
+      const res = await fetch(`${BASE_URL}/admin_area/api/get_products.php`);
       const data = await res.json();
-      setProducts(data);
+      setProducts(Array.isArray(data) ? data : []);
     } catch (error) {
       setMsg("Error fetching products.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -39,80 +42,77 @@ export default function ViewProducts() {
     formData.append("product_id", id);
 
     try {
-      const res = await fetch(
-        "https://shop-sphere.infinityfreeapp.com/api/admin/delete_product.php",
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
+      const res = await fetch(`${BASE_URL}/admin_area/api/delete_product.php`, {
+        method: "POST",
+        body: formData,
+      });
 
       const data = await res.json();
       setMsg(data.message);
       if (data.status === "success") {
-        fetchProducts(); // Refresh list
+        fetchProducts();
       }
     } catch (error) {
       setMsg("Error deleting product.");
     }
   };
 
-  // Edit button logic
-  const editProduct = (id) => {
-    router.push(`/admin/products/edit_product?id=${id}`);
-  };
-
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
-      <h2 className="text-2xl font-bold mb-6">All Products</h2>
+    <div className="min-h-screen bg-gray-50 p-6">
+      <h2 className="text-2xl font-bold mb-6 text-indigo-600">All Products</h2>
 
-      {/* Responsive table wrapper */}
-      <div className="overflow-x-auto">
-        <table className="w-full bg-white rounded shadow min-w-[600px]">
-          <thead className="bg-gray-200">
-            <tr>
-              <th className="p-3 text-left">ID</th>
-              <th className="p-3 text-left">Title</th>
-              <th className="p-3 text-left">Price</th>
-              <th className="p-3 text-left">Image</th>
-              <th className="p-3 text-left">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {products.map((prod) => (
-              <tr key={prod.product_id} className="border-t hover:bg-gray-50">
-                <td className="p-3">{prod.product_id}</td>
-                <td className="p-3">{prod.product_title}</td>
-                <td className="p-3">Rs. {prod.product_price}</td>
-                <td className="p-3">
-                  <img
-                    src={`https://shop-sphere.infinityfreeapp.com/api/admin/product_images/${prod.product_image1}`}
-                    alt={prod.product_title}
-                    className="w-12 h-12 object-cover rounded"
-                  />
-                </td>
-                <td className="p-3 flex flex-wrap gap-2">
-                  <button
-                    className="bg-yellow-400 px-3 py-1 rounded hover:bg-yellow-300 text-sm"
-                    onClick={() => editProduct(prod.product_id)} // redirect logic here
-                  >
-                    Edit
-                  </button>
-                  <button
-                    className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-400 text-sm"
-                    onClick={() => deleteProduct(prod.product_id)}
-                  >
-                    Delete
-                  </button>
-                </td>
+      {loading ? (
+        <div className="text-center">Loading products...</div>
+      ) : (
+        <div className="overflow-x-auto bg-white rounded shadow">
+          <table className="w-full min-w-[600px]">
+            <thead className="bg-gray-100 border-b">
+              <tr>
+                <th className="p-3 text-left">ID</th>
+                <th className="p-3 text-left">Title</th>
+                <th className="p-3 text-left">Price</th>
+                <th className="p-3 text-left">Image</th>
+                <th className="p-3 text-left">Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {products.map((prod) => (
+                <tr key={prod.product_id} className="border-t hover:bg-gray-50">
+                  <td className="p-3">{prod.product_id}</td>
+                  <td className="p-3">{prod.product_title}</td>
+                  <td className="p-3">Rs. {prod.product_price}</td>
+                  <td className="p-3">
+                    <img
+                      src={`${BASE_URL}/admin_area/product_images/${prod.product_image1}`}
+                      alt={prod.product_title}
+                      className="w-12 h-12 object-cover rounded"
+                    />
+                  </td>
+                  <td className="p-3 flex gap-2">
+                    <button
+                      className="bg-yellow-400 px-3 py-1 rounded hover:bg-yellow-300 text-sm"
+                      onClick={() => router.push(`/admin/products/edit_product?id=${prod.product_id}`)}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-400 text-sm"
+                      onClick={() => deleteProduct(prod.product_id)}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
 
       {msg && (
-        <p className="mt-4 text-center text-red-500 font-medium">{msg}</p>
+        <p className="mt-4 text-center text-red-600 font-medium bg-red-50 py-2 rounded">
+          {msg}
+        </p>
       )}
     </div>
   );

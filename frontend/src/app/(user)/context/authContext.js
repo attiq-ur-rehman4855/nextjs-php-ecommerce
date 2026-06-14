@@ -4,6 +4,12 @@ import { createContext, useContext, useEffect, useState } from "react";
 
 const AuthContext = createContext();
 
+
+
+// Aapka AwardSpace Live Subdomain URL
+const BASE_URL = "http://attiq-ecommerce-api.atwebpages.com";
+
+
 export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userId, setUserId] = useState(null);
@@ -32,8 +38,7 @@ export const AuthProvider = ({ children }) => {
 
   const fetchCartCount = async (uid) => {
     try {
-      const res = await fetch(
-        `https://shop-sphere.infinityfreeapp.com/api/user/get_cart_count.php?user_id=${uid}`
+      const res = await fetch(`${BASE_URL}/user_area/api/get_cart_count.php?user_id=${uid}`
       );
       const data = await res.json();
       setCartCount(data.count || 0);

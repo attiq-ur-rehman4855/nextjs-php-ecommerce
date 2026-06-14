@@ -4,6 +4,9 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
+// Aapka AwardSpace Live Subdomain URL
+const BASE_URL = "http://attiq-ecommerce-api.atwebpages.com";
+
 export default function Signup() {
   const router = useRouter();
   const [form, setForm] = useState({
@@ -30,7 +33,9 @@ export default function Signup() {
     const { name, value, files } = e.target;
 
     if (name === "image") {
-      setForm({ ...form, image: files[0] });
+      if (files && files[0]) {
+        setForm({ ...form, image: files[0] });
+      }
     } else {
       setForm({ ...form, [name]: value });
 
@@ -60,7 +65,7 @@ export default function Signup() {
     e.preventDefault();
 
     if (emailError || phoneError) {
-      alert("Fix the errors before submitting.");
+      alert("Please fix the validation errors before submitting.");
       return;
     }
 
@@ -74,11 +79,14 @@ export default function Signup() {
     formData.append("email", form.email);
     formData.append("phone", form.phone);
     formData.append("password", form.password);
-    formData.append("image", form.image);
+    if (form.image) {
+      formData.append("image", form.image);
+    }
 
     try {
+      // Updated to AwardSpace Endpoint structure
       const res = await fetch(
-        "https://shop-sphere.infinityfreeapp.com/api/user/signup.php",
+        `${BASE_URL}/user_area/api/signup.php`,
         {
           method: "POST",
           body: formData,
@@ -87,8 +95,8 @@ export default function Signup() {
 
       const data = await res.json();
       setMsg(data.message);
+      
       if (data.status === "success") {
-        sessionStorage.setItem("isLoggedIn", "true");
         router.push("/login");
       }
     } catch (error) {
@@ -97,80 +105,96 @@ export default function Signup() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-      <div className="max-w-md w-full bg-white p-8 rounded shadow">
-        <h2 className="text-2xl font-bold mb-6 text-center">
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4 py-12">
+      <div className="max-w-md w-full bg-white p-8 rounded-lg shadow-md">
+        <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
           Create an Account
         </h2>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <input
-            type="text"
-            name="name"
-            placeholder="Name"
-            onChange={handleChange}
-            className="w-full p-2 border rounded"
-            required
-          />
-          <input
-            type="email"
-            name="email"
-            placeholder="Email"
-            onChange={handleChange}
-            className="w-full p-2 border rounded"
-            required
-          />
-          {emailError && <p className="text-red-500 text-sm">{emailError}</p>}
+        <form onSubmit={handleSubmit} className="space-y-4 text-left">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+            <input
+              type="text"
+              name="name"
+              placeholder="Enter your name"
+              onChange={handleChange}
+              className="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-yellow-400"
+              required
+            />
+          </div>
 
-          <input
-            type="text"
-            name="phone"
-            placeholder="Phone Number"
-            onChange={handleChange}
-            className="w-full p-2 border rounded"
-            required
-          />
-          {phoneError && <p className="text-red-500 text-sm">{phoneError}</p>}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+            <input
+              type="email"
+              name="email"
+              placeholder="Enter your email"
+              onChange={handleChange}
+              className="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-yellow-400"
+              required
+            />
+            {emailError && <p className="text-red-500 text-xs mt-1">{emailError}</p>}
+          </div>
 
-          {/* Custom file input */}
-          <label className="block">
-            <span className="text-gray-700">Upload your image</span>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+            <input
+              type="text"
+              name="phone"
+              placeholder="e.g., +923001234567"
+              onChange={handleChange}
+              className="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-yellow-400"
+              required
+            />
+            {phoneError && <p className="text-red-500 text-xs mt-1">{phoneError}</p>}
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Profile Image</label>
             <input
               type="file"
               name="image"
               accept="image/*"
               onChange={handleChange}
-              className="w-full p-2 border rounded bg-white mt-1"
+              className="w-full p-2 border rounded bg-white focus:outline-none"
               required
             />
-          </label>
+          </div>
 
-          <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            onChange={handleChange}
-            className="w-full p-2 border rounded"
-            required
-          />
-          <input
-            type="password"
-            name="confirmPassword"
-            placeholder="Confirm Password"
-            onChange={handleChange}
-            className="w-full p-2 border rounded"
-            required
-          />
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+            <input
+              type="password"
+              name="password"
+              placeholder="Create password"
+              onChange={handleChange}
+              className="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-yellow-400"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
+            <input
+              type="password"
+              name="confirmPassword"
+              placeholder="Confirm your password"
+              onChange={handleChange}
+              className="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-yellow-400"
+              required
+            />
+          </div>
 
           <button
             type="submit"
-            className="w-full bg-yellow-400 hover:bg-yellow-300 text-black font-semibold py-2 rounded"
+            className="w-full bg-yellow-400 hover:bg-yellow-300 text-black font-semibold py-2 rounded transition duration-200 mt-2"
           >
             Sign Up
           </button>
         </form>
 
-        <p className="mt-4 text-center text-sm text-gray-600">
+        <p className="mt-6 text-center text-sm text-gray-600">
           Already have an account?{" "}
           <Link
             href="/login"
